@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="exploring_status.manager.class">Exploring\StatusBundle\Service\StatusManager</parameter>
+        <parameter key="exploring_status.session_engine.class">Exploring\StatusBundle\Engine\SessionStatusEngine
+        </parameter>
+        <parameter key="exploring_status.apc_engine.class">Exploring\StatusBundle\Engine\ApcStatusEngine
+        </parameter>
+    </parameters>
+
+    <services>
+        <service id="exploring_status.manager" class="%exploring_status.manager.class%">
+        </service>
+
+        <service id="exploring_status.session_engine" class="%exploring_status.session_engine.class%"
+                 public="false">
+            <argument type="service" id="session"/>
+        </service>
+
+        <service id="exploring_status.apc_engine" class="%exploring_status.apc_engine.class%"
+                 public="false">
+        </service>
+    </services>
+</container>

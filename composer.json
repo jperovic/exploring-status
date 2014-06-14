@@ -1,0 +1,17 @@
+{
+    "name": "exploring/status",
+    "license": "MIT",
+    "type": "library",
+    "description": "Operation status announcer",
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/http-foundation": "2.*"
+    },
+    "target-dir": "Exploring/StatusBundle",
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "": "./"
+        }
+    }
+}
