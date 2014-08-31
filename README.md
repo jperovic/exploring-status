@@ -1,4 +1,4 @@
-exploring-status
+ExploringStatusBundle
 ================
 
 This bundle aims to help with setting controller's operation status by elimination cumbersome checking of session flash bag.
