@@ -60,7 +60,7 @@ $fileManager->success('Yey, you did it!');
 
 $fileManager->warning('Ok, everything went ok, but there is something fishy going on here.');
 
-$fileManager->error('Couldn't do it :(');
+$fileManager->error('Couldn\'t do it :(');
 ```
 
 Retrieving the operation status:
