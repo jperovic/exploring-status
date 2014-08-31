@@ -3,32 +3,76 @@
 
     class StatusObject
     {
+        const LEVEL_SUCCESS = 0;
+
+        const LEVEL_WARN = 1;
+
+        const LEVEL_ERROR = 2;
+
         /**
          * @var int
          */
-        private $error;
+        private $level;
 
         /**
          * @var string
          */
         private $message;
+        /**
+         * @var \Exception
+         */
+        private $cause;
 
         /**
-         * @param  string $message
-         * @param int     $error
+         * @param  string    $message
+         * @param \Exception $cause
+         * @param int        $level
          */
-        function __construct($message, $error = 0)
+        function __construct($message, \Exception $cause = null, $level = self::LEVEL_SUCCESS)
         {
             $this->message = $message;
-            $this->error = $error;
+            $this->level = $level;
+            $this->cause = $cause;
         }
 
         /**
          * @return int
          */
-        public function getError()
+        public function getLevel()
         {
-            return $this->error;
+            return $this->level;
+        }
+
+        /**
+         * @return bool
+         */
+        public function isError()
+        {
+            return $this->level == self::LEVEL_ERROR;
+        }
+
+        /**
+         * @return bool
+         */
+        public function isWarning()
+        {
+            return $this->level == self::LEVEL_WARN;
+        }
+
+        /**
+         * @return bool
+         */
+        public function isSuccess()
+        {
+            return $this->level == self::LEVEL_SUCCESS;
+        }
+
+        /**
+         * @return \Exception
+         */
+        public function getCause()
+        {
+            return $this->cause;
         }
 
         /**

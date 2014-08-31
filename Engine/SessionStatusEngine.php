@@ -2,28 +2,31 @@
     namespace Exploring\StatusBundle\Engine;
 
     use Exploring\StatusBundle\Data\StatusObject;
-    use Exploring\StatusBundle\Service\StatusManager;
     use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
     use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
     class SessionStatusEngine implements StatusEngineInterface
     {
-        const BAG_NAME = "flashes";
+        /**
+         * @var FlashBag
+         */
+        private $bag;
 
         /**
-         * {@inheritdoc}
+         * @param SessionInterface $session
+         * @param string           $bagName
          */
-        function __construct(SessionInterface $session)
+        function __construct(SessionInterface $session, $bagName)
         {
-            $this->session = $session;
+            $this->bag = $session->getBag($bagName);
         }
 
         /**
          * {@inheritdoc}
          */
-        public function set(StatusObject $statusObject)
+        public function put($group, StatusObject $statusObject)
         {
-            $this->getBag()->add(StatusManager::MESSAGE_TYPE, $statusObject);
+            $this->bag->add($group, $statusObject);
 
             return $this;
         }
@@ -31,42 +34,42 @@
         /**
          * {@inheritdoc}
          */
-        public function has()
+        public function isEmpty($group)
         {
-            return $this->getBag()->peek(StatusManager::MESSAGE_TYPE);
+            return $this->bag->peek($group) === NULL;
         }
 
         /**
          * {@inheritdoc}
          */
-        public function first()
+        public function first($group)
         {
-            if (!$this->has()) {
+            if ( $this->isEmpty($group) ) {
                 return NULL;
             }
 
-            $messages = $this->getBag()->get(StatusManager::MESSAGE_TYPE);
-
+            $messages = $this->bag->get($group);
             $first = array_shift($messages);
-
-            $this->getBag()->set(StatusManager::MESSAGE_TYPE, $messages);
+            $this->bag->set($group, $messages);
 
             return $first;
         }
 
         /**
-         * @return StatusObject[]
+         * {@inheritdoc}
          */
-        public function all()
+        public function all($group)
         {
-            return $this->getBag()->get(StatusManager::MESSAGE_TYPE);
+            return $this->bag->get($group);
         }
 
         /**
-         * @return FlashBag
+         * {@inheritdoc}
          */
-        private function getBag()
+        public function clear($group)
         {
-            return $this->session->getBag(self::BAG_NAME);
+            $this->bag->get($group);
+
+            return $this;
         }
     }

@@ -6,24 +6,38 @@
     interface StatusEngineInterface
     {
         /**
+         * @param string       $group
          * @param StatusObject $statusObject
          *
          * @return $this
          */
-        public function set(StatusObject $statusObject);
+        public function put($group, StatusObject $statusObject);
 
         /**
+         * @param string $group
+         *
          * @return bool
          */
-        public function has();
+        public function isEmpty($group);
 
         /**
+         * @param string $group
+         *
          * @return StatusObject
          */
-        public function first();
+        public function first($group);
 
         /**
+         * @param string $group
+         *
          * @return StatusObject[]
          */
-        public function all();
+        public function all($group);
+
+        /**
+         * @param string $group
+         *
+         * @return StatusEngineInterface
+         */
+        public function clear($group);
     }

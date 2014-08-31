@@ -1,0 +1,8 @@
+{% if status is not null %}
+    {% if status.error %}
+        ERROR:
+    {% elseif status.warning %}
+        WARNING:
+    {% endif %}
+    {{ status.message }}
+{% endif %}

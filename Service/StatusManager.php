@@ -6,7 +6,7 @@
 
     class StatusManager
     {
-        const MESSAGE_TYPE = "operation.status";
+        const DEFAULT_GROUP = "Default";
 
         /**
          * @var StatusEngineInterface
@@ -23,38 +23,104 @@
 
         /**
          * @param string $message
-         * @param int    $error
+         * @param string $group
+         * @param bool   $exclusive
          *
          * @return $this
          */
-        public function set($message, $error = 0)
+        public function success($message, $group = self::DEFAULT_GROUP, $exclusive = TRUE)
         {
-            $this->engine->set(new StatusObject($message, $error));
+            $this->put($message, $group, NULL, StatusObject::LEVEL_SUCCESS, $exclusive);
 
             return $this;
         }
 
         /**
+         * @param string     $message
+         * @param string     $group
+         * @param \Exception $cause
+         * @param bool       $exclusive
+         *
+         * @return $this
+         */
+        public function error($message, $group = self::DEFAULT_GROUP, \Exception $cause = NULL, $exclusive = TRUE)
+        {
+            $this->put($message, $group, $cause, StatusObject::LEVEL_ERROR, $exclusive);
+
+            return $this;
+        }
+
+        /**
+         * @param string     $message
+         * @param string     $group
+         * @param \Exception $cause
+         * @param bool       $exclusive
+         *
+         * @return $this
+         */
+        public function warning($message, $group = self::DEFAULT_GROUP, \Exception $cause = NULL, $exclusive = TRUE)
+        {
+            $this->put($message, $group, $cause, StatusObject::LEVEL_WARN, $exclusive);
+
+            return $this;
+        }
+
+        /**
+         * @param string     $message
+         * @param string     $group
+         * @param \Exception $cause
+         * @param int        $level
+         * @param bool       $exclusive
+         *
+         * @return $this
+         */
+        private function put($message, $group = self::DEFAULT_GROUP, \Exception $cause = NULL, $level = 0, $exclusive = TRUE)
+        {
+            if ( $exclusive ) {
+                $this->engine->clear($group);
+            }
+            $this->engine->put($group, new StatusObject($message, $cause, $level));
+
+            return $this;
+        }
+
+        /**
+         * @param string $group
+         *
          * @return bool
          */
-        public function hasStatus()
+        public function isEmpty($group = self::DEFAULT_GROUP)
         {
-            return $this->engine->has();
+            return $this->engine->isEmpty($group);
         }
 
         /**
+         * @param string $group
+         *
          * @return StatusObject[]
          */
-        public function all()
+        public function all($group = self::DEFAULT_GROUP)
         {
-            return $this->engine->all();
+            return $this->engine->all($group);
         }
 
         /**
+         * @param string $group
+         *
          * @return StatusObject
          */
-        public function first()
+        public function first($group = self::DEFAULT_GROUP)
         {
-            return $this->engine->first();
+            return $this->engine->first($group);
+        }
+
+        /**
+         * @param string $group
+         *
+         * @return StatusEngineInterface
+         */
+        public function clear($group = self::DEFAULT_GROUP)
+        {
+            return $this->engine->clear($group);
         }
     }

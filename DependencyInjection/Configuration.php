@@ -21,7 +21,8 @@
 
             $rootNode
                 ->children()
-                ->enumNode('engine')->values(array('apc', 'session'))->defaultValue("apc")->end()->end();
+                    ->enumNode('engine')->values(array('apc', 'session'))->defaultValue("apc")->end()
+                ->end();
 
             return $treeBuilder;
         }

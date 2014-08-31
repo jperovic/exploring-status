@@ -6,23 +6,36 @@
 
     <parameters>
         <parameter key="exploring_status.manager.class">Exploring\StatusBundle\Service\StatusManager</parameter>
-        <parameter key="exploring_status.session_engine.class">Exploring\StatusBundle\Engine\SessionStatusEngine
-        </parameter>
-        <parameter key="exploring_status.apc_engine.class">Exploring\StatusBundle\Engine\ApcStatusEngine
-        </parameter>
+        <parameter key="exploring_status.session_engine.class">Exploring\StatusBundle\Engine\SessionStatusEngine</parameter>
+        <parameter key="exploring_status.apc_engine.class">Exploring\StatusBundle\Engine\ApcStatusEngine</parameter>
+        <parameter key="exploring_status.twig_extension.class">Exploring\StatusBundle\Twig\Extension</parameter>
+        <parameter key="exploring_status.flashbag.class">Symfony\Component\HttpFoundation\Session\Flash\FlashBag</parameter>
+        <parameter key="exploring_status.flashbag_name">_operation_status</parameter>
     </parameters>
 
     <services>
         <service id="exploring_status.manager" class="%exploring_status.manager.class%">
         </service>
 
-        <service id="exploring_status.session_engine" class="%exploring_status.session_engine.class%"
-                 public="false">
+        <service id="exploring_status.session_engine" class="%exploring_status.session_engine.class%" public="false">
             <argument type="service" id="session"/>
+            <argument type="string">%exploring_status.flashbag_name%</argument>
         </service>
 
-        <service id="exploring_status.apc_engine" class="%exploring_status.apc_engine.class%"
-                 public="false">
+        <service id="exploring_status.apc_engine" class="%exploring_status.apc_engine.class%" public="false">
+            <argument type="string">%exploring_status.flashbag_name%</argument>
+        </service>
+
+        <service id="exploring_status.twig_extension" class="%exploring_status.twig_extension.class%">
+            <argument type="service" id="exploring_status.manager"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="exploring_status.flashbag" class="%exploring_status.flashbag.class%">
+            <argument type="string">%exploring_status.flashbag_name%</argument>
+            <call method="setName">
+                <argument type="string">%exploring_status.flashbag_name%</argument>
+            </call>
         </service>
     </services>
 </container>

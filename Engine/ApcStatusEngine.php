@@ -2,19 +2,35 @@
     namespace Exploring\StatusBundle\Engine;
 
     use Exploring\StatusBundle\Data\StatusObject;
-    use Exploring\StatusBundle\Service\StatusManager;
 
     class ApcStatusEngine implements StatusEngineInterface
     {
         /**
+         * @var array
+         */
+        private $cache;
+
+        private $cacheId;
+
+        /**
+         * @param string $cacheId
+         */
+        function __construct($cacheId)
+        {
+            $this->cacheId = $cacheId;
+
+            $cache = apc_fetch($cacheId);
+            $this->cache = is_array($cache) ? $cache : array();
+        }
+
+        /**
          * {@inheritdoc}
          */
-        public function set(StatusObject $statusObject)
+        public function put($group, StatusObject $statusObject)
         {
-            $messages = $this->getCache();
-            $messages[] = $statusObject;
-
-            apc_store(StatusManager::MESSAGE_TYPE, $messages);
+            $this->initCacheGroup($group);
+            $this->cache[$group][] = $statusObject;
+            $this->save();
 
             return $this;
         }
@@ -22,46 +38,65 @@
         /**
          * {@inheritdoc}
          */
-        public function has()
+        public function isEmpty($group)
         {
-            return $this->getCache();
+            return !array_key_exists($group, $this->cache) || !is_array($this->cache[$group]) || !count($this->cache[$group]);
         }
 
         /**
          * {@inheritdoc}
          */
-        public function first()
+        public function first($group)
         {
-            if (!$this->has()) {
+            if ( $this->isEmpty($group) ) {
                 return NULL;
             }
 
-            $messages = $this->getCache();
-
-            $first = array_shift($messages);
-
-            apc_store(StatusManager::MESSAGE_TYPE, $messages);
+            $first = array_shift($this->cache[$group]);
+            $this->save();
 
             return $first;
         }
 
         /**
+         * @param string $group
+         *
          * @return StatusObject[]
          */
-        public function all()
+        public function all($group)
         {
-            $data = $this->getCache();
+            $data = array_key_exists($group, $this->cache) ? $this->cache[$group] : array();
 
-            apc_delete(StatusManager::MESSAGE_TYPE);
+            apc_delete($this->cacheId);
 
-            return $data ? $data : array();
+            return $data;
         }
 
+
         /**
-         * @return StatusObject[]
+         * @param string $group
+         *
+         * @return StatusEngineInterface
          */
-        private function getCache()
+        public function clear($group)
         {
-            return apc_fetch(StatusManager::MESSAGE_TYPE);
+            if ( array_key_exists($group, $this->cache) ) {
+                unset($this->cache[$group]);
+                $this->save();
+            }
+
+            return $this;
+        }
+
+        private function initCacheGroup($group)
+        {
+            $cache = apc_fetch($this->cacheId);
+
+            return is_array($cache) && array_key_exists($group, $cache) ? $cache[$group] : $this->cache[$group] = array();
+        }
+
+        private function save()
+        {
+            apc_store($this->cacheId, $this->cache);
         }
     }
