@@ -109,7 +109,7 @@ $fileManager->success('Yey, you did it!', 'happiness');
 $fileManager->warning('Ok, everything went ok, but there is something fishy going on here.');
 
 // This one goes into `Fatal`
-$fileManager->error('Couldn't do it :(', 'Fatal');
+$fileManager->error('Couldn\'t do it :(', 'Fatal');
 ```
 
 As for retrieving same rule applies as defined above - you only need to pass group name as argument.
@@ -128,8 +128,10 @@ $all = $manager->all('Fatal');
 
 <b>Twig:</b>
 
+```TWIG
 {# This prints first status message directly #}
 {{ ExploringStatus_First('happiness') }}
 
 {# This prints all status messages directly #}
 {{ ExploringStatus_All('Fatal') }}
+```
