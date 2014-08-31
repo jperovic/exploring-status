@@ -56,11 +56,11 @@ Setting the operation status:
 ```php
 $manager = $this->get('exploring_status.manager');
 
-$fileManager->success('Yey, you did it!');
+$manager->success('Yey, you did it!');
 
-$fileManager->warning('Ok, everything went ok, but there is something fishy going on here.');
+$manager->warning('Ok, everything went ok, but there is something fishy going on here.');
 
-$fileManager->error('Couldn\'t do it :(');
+$manager->error('Couldn\'t do it :(');
 ```
 
 Retrieving the operation status:
@@ -103,13 +103,13 @@ Status messages can be grouped. In fact, when you set the status message goes to
 $manager = $this->get('exploring_status.manager');
 
 // This message will go into `happiness` group
-$fileManager->success('Yey, you did it!', 'happiness');
+$manager->success('Yey, you did it!', 'happiness');
 
 // This one goes into `Default`
-$fileManager->warning('Ok, everything went ok, but there is something fishy going on here.');
+$manager->warning('Ok, everything went ok, but there is something fishy going on here.');
 
 // This one goes into `Fatal`
-$fileManager->error('Couldn\'t do it :(', 'Fatal');
+$manager->error('Couldn\'t do it :(', 'Fatal');
 ```
 
 As for retrieving same rule applies as defined above - you only need to pass group name as argument.
