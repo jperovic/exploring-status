@@ -3,7 +3,6 @@
 
     use Exploring\StatusBundle\Data\StatusObject;
     use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
-    use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
     class SessionStatusEngine implements StatusEngineInterface
     {
@@ -12,13 +11,9 @@
          */
         private $bag;
 
-        /**
-         * @param SessionInterface $session
-         * @param string           $bagName
-         */
-        function __construct(SessionInterface $session, $bagName)
+        public function __construct(FlashBag $bag)
         {
-            $this->bag = $session->getBag($bagName);
+            $this->bag = $bag;
         }
 
         /**

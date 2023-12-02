@@ -18,8 +18,7 @@
         </service>
 
         <service id="exploring_status.session_engine" class="%exploring_status.session_engine.class%" public="false">
-            <argument type="service" id="session"/>
-            <argument type="string">%exploring_status.flashbag_name%</argument>
+            <argument type="service" id="exploring_status.flashbag"/>
         </service>
 
         <service id="exploring_status.apc_engine" class="%exploring_status.apc_engine.class%" public="false">
@@ -36,6 +35,12 @@
             <call method="setName">
                 <argument type="string">%exploring_status.flashbag_name%</argument>
             </call>
+        </service>
+
+        <service id="exploring_status.request_listener" class="Exploring\StatusBundle\Service\RequestListener">
+            <argument>%exploring_status.engine%</argument>
+            <argument type="service" id="exploring_status.flashbag"/>
+            <tag name="kernel.event_listener" event="kernel.request" priority="15"/>
         </service>
     </services>
 </container>

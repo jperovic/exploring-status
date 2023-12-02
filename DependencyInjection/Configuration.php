@@ -16,10 +16,9 @@
          */
         public function getConfigTreeBuilder()
         {
-            $treeBuilder = new TreeBuilder();
-            $rootNode = $treeBuilder->root('exploring_status');
+            $treeBuilder = new TreeBuilder('exploring_status');
 
-            $rootNode
+            $treeBuilder->getRootNode()
                 ->children()
                     ->enumNode('engine')->values(array('apc', 'session'))->defaultValue("apc")->end()
                 ->end();

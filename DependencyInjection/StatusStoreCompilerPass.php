@@ -19,10 +19,5 @@
         {
             $container->getDefinition("exploring_status.manager")
                 ->setArguments(array(new Reference($container->getParameter("exploring_status.engine"))));
-
-            // We need to register the custom flash bag
-            if ( $container->getParameter("exploring_status.engine") == "exploring_status.session_engine" ) {
-                $container->getDefinition('session')->addMethodCall('registerBag', array(new Reference('exploring_status.flashbag')));
-            }
         }
     }
